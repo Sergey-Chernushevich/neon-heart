@@ -1,7 +1,7 @@
 import { ctx, canvas } from "./config.js";
 import { state } from "./state.js";
 
-// ❤️ рисование одного сердечка
+// ❤️ рисование одного сердечка (x = центр)
 function drawHeart(x, y, size) {
   const topCurveHeight = size * 0.3;
 
@@ -10,7 +10,6 @@ function drawHeart(x, y, size) {
   ctx.beginPath();
   ctx.moveTo(x, y + topCurveHeight);
 
-  // левая часть
   ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
 
   ctx.bezierCurveTo(
@@ -22,7 +21,6 @@ function drawHeart(x, y, size) {
     y + size,
   );
 
-  // правая часть
   ctx.bezierCurveTo(
     x,
     y + (size + topCurveHeight) / 2,
@@ -36,7 +34,6 @@ function drawHeart(x, y, size) {
 
   ctx.closePath();
 
-  // 💖 градиент
   const grad = ctx.createLinearGradient(x, y, x, y + size);
   grad.addColorStop(0, "#ff00ff");
   grad.addColorStop(1, "#660066");
@@ -51,19 +48,21 @@ function drawHeart(x, y, size) {
   ctx.restore();
 }
 
-// ❤️ основной рендер жизней
+// ❤️ рендер жизней (ПО ЦЕНТРУ)
 export function drawLives() {
   const lives = state.lives;
 
-  const size = 54; // увеличено в 3 раза
+  const size = 54;
   const spacing = 12;
 
   const totalWidth = lives * size + (lives - 1) * spacing;
 
-  // 🎯 центр по горизонтали
-  const startX = (canvas.width - totalWidth) / 2;
+  // 🎯 центр всей группы
+  const centerX = canvas.width / 2;
 
-  // 📍 снизу экрана
+  // стартовая позиция = центр - половина ширины + половина сердца
+  const startX = centerX - totalWidth / 2 + size / 2;
+
   const y = canvas.height - size - 50;
 
   for (let i = 0; i < lives; i++) {
