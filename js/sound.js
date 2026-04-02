@@ -1,8 +1,8 @@
 const base = new URL("../assets/sounds/", import.meta.url).href;
 
 export const sounds = {
-  hit: new Audio(`${base}hit.mp3`),
-  brick: new Audio(`${base}brick.mp3`),
+  hit: new Audio(`${base}hit.wav`),
+  brick: new Audio(`${base}brick.wav`),
   power: new Audio(`${base}power.mp3`),
   win: new Audio(`${base}sound_win.wav`),
   lose: new Audio(`${base}sound_lose.wav`),
