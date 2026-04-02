@@ -13,31 +13,54 @@ bgMusic.loop = true;
 bgMusic.volume = 0.35;
 
 let unlocked = false;
+let shouldStartMusic = false;
 
-function unlock() {
+function unlockAudio() {
   if (unlocked) return;
   unlocked = true;
 
-  bgMusic
-    .play()
-    .then(() => bgMusic.pause())
-    .catch(() => {});
-  Object.values(sounds).forEach((s) => {
-    s.play()
-      .then(() => s.pause())
-      .catch(() => {});
-  });
+  // трюк с AudioContext
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new Ctx();
+    const buf = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    src.onended = () => ctx.close();
+  } catch (_) {}
+
+  if (shouldStartMusic) {
+    setTimeout(() => {
+      bgMusic.play().catch(() => {});
+    }, 150); // можно 100–300
+  }
 }
 
-document.addEventListener("touchstart", unlock, { once: true });
-document.addEventListener("mousedown", unlock, { once: true });
+document.addEventListener("touchstart", unlockAudio, {
+  once: true,
+  capture: true,
+});
+
+document.addEventListener("mousedown", unlockAudio, {
+  once: true,
+  capture: true,
+});
 
 export function startMusic() {
-  bgMusic.currentTime = 0;
-  bgMusic.play().catch(() => {});
+  shouldStartMusic = true;
+
+  // если уже разблокировано — запускаем сразу (с задержкой)
+  if (unlocked) {
+    setTimeout(() => {
+      bgMusic.play().catch(() => {});
+    }, 150);
+  }
 }
 
 export function stopMusic() {
+  shouldStartMusic = false;
   bgMusic.pause();
   bgMusic.currentTime = 0;
 }
