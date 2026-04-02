@@ -1,7 +1,6 @@
 import { ctx, canvas } from "./config.js";
 import { state } from "./state.js";
 
-// ❤️ рисование одного сердечка (x = центр)
 function drawHeart(x, y, size) {
   const topCurveHeight = size * 0.3;
 
@@ -48,7 +47,6 @@ function drawHeart(x, y, size) {
   ctx.restore();
 }
 
-// ❤️ рендер жизней (ПО ЦЕНТРУ)
 export function drawLives() {
   const lives = state.lives;
 
@@ -57,10 +55,8 @@ export function drawLives() {
 
   const totalWidth = lives * size + (lives - 1) * spacing;
 
-  // 🎯 центр всей группы
   const centerX = canvas.width / 2;
 
-  // стартовая позиция = центр - половина ширины + половина сердца
   const startX = centerX - totalWidth / 2 + size / 2;
 
   const y = canvas.height - size - 50;
