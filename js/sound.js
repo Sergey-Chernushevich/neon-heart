@@ -12,6 +12,26 @@ export const bgMusic = new Audio(`${base}music_bg.mp3`);
 bgMusic.loop = true;
 bgMusic.volume = 0.35;
 
+let unlocked = false;
+
+function unlock() {
+  if (unlocked) return;
+  unlocked = true;
+
+  bgMusic
+    .play()
+    .then(() => bgMusic.pause())
+    .catch(() => {});
+  Object.values(sounds).forEach((s) => {
+    s.play()
+      .then(() => s.pause())
+      .catch(() => {});
+  });
+}
+
+document.addEventListener("touchstart", unlock, { once: true });
+document.addEventListener("mousedown", unlock, { once: true });
+
 export function startMusic() {
   bgMusic.currentTime = 0;
   bgMusic.play().catch(() => {});
